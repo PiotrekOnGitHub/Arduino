@@ -1,38 +1,44 @@
-const int in = 2;
-const int out = 7;
+const int[] in = {2, 3};
+const int[] out = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
-const int t = 10 * 1000;
-const int tm = 1 * 1000;
-
-const int a = 1;
+const int in_size = 2;
+const int out_size= 10;
 
 void setup() {
-  pinMode(in, INPUT);
-  pinMode(out,OUTPUT);
-}
-
-void off() {
-  digitalWrite(out, LOW);
-}
-
-void on() {
-  digitalWrite(out, HIGH);
-  delay(t - tm);
-  for (int i = 1; i <= tm; i++) {
-    delay(a);
-    if (digitalRead(in) == 1) {
-      on();
-      break;
-    }
+  for (int i = 0; i < in_size; i++) {
+    pinMode(in[i], INPUT);
   }
-  off();
+  for (int j = 0; j < out_size; j++){
+    pinMode(out[j], OUTPUT);
+  }
+}
+int totalTime = 20000;
+int threashold = 1000;
+
+int sleepTime = totalTime - (out_size * threashold);
+
+bool blocked = false;
+void on() {
+  for (int i = 0; i < out_size; i++) {
+    digitalWrite(out[i], HIGH);
+    delay(threashold);
+  }
+  delay(sleepTime);
+  for (int i = 0; i < out_size; i++) {
+    digitalWrite(out[i], LOW);
+  }
 }
 
 void loop() {
-  int inputIn = digitalRead(in);
-  if (inputIn == 1) {
+  int s1 = digitalRead(in[0]);
+  int s2 = digitalRead(in[0]);
+  if (s1 == 1 && !blocked) {
+    blocked = true;
     on();
-  } else {
-    off();
+    blocked = false;
+  } else if (s2 == 1 && !blocked) {
+    blocked = true;
+    on();
+    blocked = false;
   }
 }
