@@ -31,7 +31,7 @@ void on() {
 
 void loop() {
   int s1 = digitalRead(in[0]);
-  int s2 = digitalRead(in[0]);
+  int s2 = digitalRead(in[1]);
   if (s1 == 1 && !blocked) {
     blocked = true;
     on();
